@@ -1,60 +1,91 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Security Alert</title>
+    <title>Security Alert - Protect Your Device</title>
     <style>
         body {
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            background-color: #000;
+            background: #111;
             color: white;
-            overflow: hidden;
+            text-align: center;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            background-image: url('https://images.unsplash.com/photo-1563986768609-322da13575f3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
         }
-        .alert-box {
-            background: #d10000;
-            color: white;
-            border: 3px solid #ff0000;
+        .warning-box {
+            background: rgba(200, 0, 0, 0.9);
+            border: 3px solid red;
             border-radius: 10px;
             padding: 25px;
             max-width: 500px;
-            text-align: center;
             box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
             animation: pulse 1.5s infinite;
         }
         @keyframes pulse {
-            0% { box-shadow: 0 0 10px rgba(255, 0, 0, 0.7); }
-            50% { box-shadow: 0 0 30px rgba(255, 0, 0, 0.9); }
-            100% { box-shadow: 0 0 10px rgba(255, 0, 0, 0.7); }
+            0% { box-shadow: 0 0 10px red; }
+            50% { box-shadow: 0 0 30px red; }
+            100% { box-shadow: 0 0 10px red; }
         }
-        .btn-install {
-            background: #00a800;
-            color: white;
+        .btn {
             padding: 12px 25px;
+            margin: 10px;
             border: none;
             border-radius: 5px;
             font-weight: bold;
             cursor: pointer;
         }
+        .btn-protect {
+            background: #00aa00;
+            color: white;
+        }
+        .btn-ignore {
+            background: #333;
+            color: white;
+        }
     </style>
 </head>
 <body>
-    <div class="alert-box">
-        <h1>⚠️ CRITICAL WARNING ⚠️</h1>
-        <p>YOUR DEVICE IS AT RISK OF HACKING!</p>
-        <p>Malicious actors are attempting to steal your data.</p>
-        <button class="btn-install" onclick="window.location.href='https://example.com/vpn'">PROTECT YOURSELF NOW</button>
+    <div class="warning-box">
+        <h1>⚠️ CRITICAL SECURITY ALERT ⚠️</h1>
+        <p><strong>YOUR LOCATION HAS BEEN LEAKED!</strong></p>
+        <p>Hackers can access your bank accounts if you don't secure your device NOW.</p>
+        <button class="btn btn-protect" onclick="window.location.href='YOUR_CPA_LINK'">
+            🔒 INSTALL SECURE BROWSER NOW
+        </button>
+        <button class="btn btn-ignore" id="ignoreBtn">
+            IGNORE (UNSAFE)
+        </button>
     </div>
 
     <script>
-        // Reopen popup if user tries to leave
-        window.onbeforeunload = function() {
-            return "⚠️ WARNING: Closing this page may expose you to hackers!";
+        let backCount = 0;
+        const maxBackClicks = 7;
+        const ignoreBtn = document.getElementById('ignoreBtn');
+        
+        // Warn user when trying to leave
+        window.onbeforeunload = function(e) {
+            backCount++;
+            if (backCount < maxBackClicks) {
+                e.preventDefault();
+                e.returnValue = `⚠️ WARNING (${backCount}/${maxBackClicks}): Leaving may expose you to hackers!`;
+                return e.returnValue;
+            }
         };
+
+        // "Ignore" button also triggers warning
+        ignoreBtn.addEventListener('click', function() {
+            backCount++;
+            if (backCount < maxBackClicks) {
+                alert(`⚠️ WARNING (${backCount}/${maxBackClicks}): You are at risk!`);
+            } else {
+                window.location.href = "about:blank"; // Redirects away after 7 clicks
+            }
+        });
     </script>
 </body>
 </html>
