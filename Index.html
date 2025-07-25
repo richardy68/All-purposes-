@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Security Alert</title>
     <style>
         body {
@@ -16,23 +14,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-image: url('https://images.unsplash.com/photo-1563986768609-322da13575f3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
         }
-
-        .alert-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
         .alert-box {
             background: #d10000;
             color: white;
@@ -44,93 +26,35 @@
             box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
             animation: pulse 1.5s infinite;
         }
-
         @keyframes pulse {
             0% { box-shadow: 0 0 10px rgba(255, 0, 0, 0.7); }
             50% { box-shadow: 0 0 30px rgba(255, 0, 0, 0.9); }
             100% { box-shadow: 0 0 10px rgba(255, 0, 0, 0.7); }
         }
-
-        .alert-logo {
-            width: 80px;
-            margin-bottom: 15px;
-        }
-
-        h1 {
-            font-size: 24px;
-            margin-bottom: 15px;
-            color: #fff;
-        }
-
-        p {
-            margin-bottom: 20px;
-            font-size: 16px;
-            line-height: 1.5;
-        }
-
-        .button-group {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        .btn {
+        .btn-install {
+            background: #00a800;
+            color: white;
             padding: 12px 25px;
             border: none;
             border-radius: 5px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-install {
-            background: #00a800;
-            color: white;
-        }
-
-        .btn-install:hover {
-            background: #008000;
-        }
-
-        .btn-cancel {
-            background: #333;
-            color: white;
-        }
-
-        .btn-cancel:hover {
-            background: #555;
-        }
-
-        /* Prevent right-click & selection */
-        body {
-            user-select: none;
-            -webkit-user-select: none;
         }
     </style>
 </head>
 <body>
-    <div class="alert-overlay" id="alertOverlay">
-        <div class="alert-box">
-            <img src="https://cdn-icons-png.flaticon.com/512/753/753345.png" class="alert-logo" alt="Warning">
-            <h1>⚠️ SECURITY ALERT ⚠️</h1>
-            <p><strong>YOUR DEVICE LOCATION HAS BEEN CHANGED!</strong></p>
-            <p>Scammers are trying to steal your personal information, including bank details on this site.</p>
-            <p><strong>SECURE YOURSELF NOW!</strong></p>
-            <div class="button-group">
-                <button class="btn btn-install" onclick="window.location.href='https://example.com/vpn-download'">INSTALL VPN BROWSER NOW</button>
-                <button class="btn btn-cancel" id="cancelBtn">CANCEL (UNSAFE)</button>
-            </div>
-        </div>
+    <div class="alert-box">
+        <h1>⚠️ CRITICAL WARNING ⚠️</h1>
+        <p>YOUR DEVICE IS AT RISK OF HACKING!</p>
+        <p>Malicious actors are attempting to steal your data.</p>
+        <button class="btn-install" onclick="window.location.href='https://example.com/vpn'">PROTECT YOURSELF NOW</button>
     </div>
 
     <script>
-        // Make the popup reappear if user tries to close it
-        document.getElementById('cancelBtn').addEventListener('click', function() {
-            alert("WARNING: Leaving this page may expose you to identity theft!");
-            document.getElementById('alertOverlay').style.display = 'flex';
-        });
-
-        // Prevent right-click
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-            alert("Right-click disabled for
+        // Reopen popup if user tries to leave
+        window.onbeforeunload = function() {
+            return "⚠️ WARNING: Closing this page may expose you to hackers!";
+        };
+    </script>
+</body>
+</html>
