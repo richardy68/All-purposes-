@@ -13,15 +13,14 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #000; /* Already black, good */
+            font-family: -apple-system, BlinkMacMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #000;
             color: white;
             height: 100vh;
             overflow: hidden;
             touch-action: manipulation;
             position: fixed;
             width: 100%;
-            /* These ensure the body takes up the full viewport and doesn't scroll */
         }
         
         .alert-container {
@@ -30,23 +29,23 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9); /* This creates the dark overlay */
+            background: rgba(0,0,0,0.9);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            /* The padding here is key to create space around the centered alert-box */
-            padding: 20px; /* This padding applies to the container, pushing the alert-box inwards */
+            /* Adjusted padding for more prominent "black space" around the alert box */
+            padding: 40px 20px; /* Top/Bottom 40px, Left/Right 20px */
         }
         
         .alert-box {
             background: linear-gradient(135deg, #d10000 0%, #8b0000 100%);
             border: 3px solid #ff0000;
             border-radius: 15px;
-            /* This padding applies to the content *inside* the red box */
-            padding: 25px; /* Keep content from sticking to the edges of the red box */
-            width: 100%; /* Allows it to take up available width within its container */
-            max-width: 400px; /* Crucial: This limits the size of the alert box, making it not full screen */
+            /* Adjusted internal padding for content within the red box */
+            padding: 30px 20px; /* Top/Bottom 30px, Left/Right 20px */
+            width: 90%; /* Make it responsive, take up 90% of container width */
+            max-width: 480px; /* Limit max width, good for wider phones like 460/480px */
             text-align: center;
             box-shadow: 0 0 30px rgba(255, 0, 0, 0.7);
             animation: pulse 1.5s infinite;
@@ -65,7 +64,7 @@
         }
         
         h1 {
-            font-size: 22px;
+            font-size: 22px; /* Good default */
             margin-bottom: 15px;
             color: #fff;
             text-shadow: 0 2px 5px rgba(0,0,0,0.3);
@@ -73,7 +72,7 @@
         
         p {
             margin-bottom: 20px;
-            font-size: 16px;
+            font-size: 16px; /* Good default */
             line-height: 1.5;
         }
         
@@ -126,7 +125,6 @@
             touch-action: pan-y;
         }
 
-        /* Shake animation (added by your script, but good to have in CSS) */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             20% { transform: translateX(-10px); }
@@ -134,6 +132,54 @@
             60% { transform: translateX(-10px); }
             80% { transform: translateX(10px); }
         }
+
+        /* Media Queries for smaller screens to ensure good padding and readability */
+        @media (max-width: 480px) {
+            .alert-container {
+                /* Even more padding on smaller screens if needed, or adjust previous */
+                padding: 30px 15px; /* Slightly more aggressive padding for very narrow screens */
+            }
+            .alert-box {
+                padding: 25px 15px; /* Adjust internal padding for smaller screens */
+            }
+            h1 {
+                font-size: 20px; /* Slightly smaller font for headings on smaller screens */
+            }
+            p {
+                font-size: 15px; /* Slightly smaller font for paragraphs on smaller screens */
+            }
+            .btn {
+                padding: 12px; /* Slightly smaller button padding */
+                font-size: 15px; /* Slightly smaller button font */
+            }
+        }
+
+        @media (max-height: 600px) { /* For shorter screens, e.g., in landscape mode */
+            .alert-box {
+                padding: 20px 15px; /* Reduce vertical padding if screen is short */
+            }
+            .alert-icon {
+                width: 50px;
+                height: 50px;
+                margin-bottom: 10px;
+            }
+            h1 {
+                font-size: 18px;
+            }
+            p {
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+            .btn {
+                padding: 10px;
+                font-size: 14px;
+            }
+            .exit-attempts {
+                margin-top: 10px;
+                font-size: 12px;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -177,7 +223,6 @@
             exitAttemptsText.textContent = `Warning: ${attempts}/${maxAttempts} attempts to exit`;
             
             if (attempts < maxAttempts) {
-                // Show increasingly urgent warnings
                 const warnings = [
                     "Your data is still at risk!",
                     "Scammers are accessing your photos!",
@@ -190,24 +235,17 @@
                 
                 alert(`⚠️ ${warnings[attempts-1]}`);
                 
-                // Make the alert box shake
                 const alertBox = document.querySelector('.alert-box');
                 alertBox.style.animation = 'none';
-                alertBox.offsetHeight; // Trigger reflow
+                alertBox.offsetHeight; 
                 alertBox.style.animation = 'shake 0.5s, pulse 1.5s infinite';
-                
-                // The shake animation definition is already in the <style> block,
-                // so no need to create a new style element here.
             } else {
-                // After 7 attempts, allow exit
                 window.location.href = "about:blank";
             }
         }
         
-        // Cancel button also counts as attempt
         cancelBtn.addEventListener('click', handleExitAttempt);
         
-        // Prevent touch scrolling
         document.addEventListener('touchmove', function(e) {
             e.preventDefault();
         }, { passive: false });
