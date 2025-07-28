@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=200, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Security Alert</title>
     <style>
         * {
@@ -21,6 +21,8 @@
             touch-action: manipulation;
             position: fixed;
             width: 100%;
+            user-select: none;
+            -webkit-user-select: none;
         }
         
         .alert-container {
@@ -34,16 +36,20 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            padding: 40px 20px;
+            /* Increased padding to create more black space around the alert box */
+            padding: 50px 20px; /* Top/Bottom 50px, Left/Right 20px */
         }
         
         .alert-box {
             background: linear-gradient(135deg, #d10000 0%, #8b0000 100%);
             border: 3px solid #ff0000;
-            border-radius: 15px;
-            padding: 30px 20px;
-            width: 90%; 
-            max-width: 480px; 
+            border-radius: 15px; /* Maintains the edge curve square shape */
+            /* Adjusted internal padding for content within the red box */
+            padding: 30px 25px; /* Top/Bottom 30px, Left/Right 25px */
+            width: 100%; /* Will take available width within container's padding */
+            /* Key: Max width set to fit perfectly within a 420px screen
+               (420px screen - 20px left padding - 20px right padding = 380px) */
+            max-width: 380px; 
             text-align: center;
             box-shadow: 0 0 30px rgba(255, 0, 0, 0.7);
             animation: pulse 1.5s infinite;
@@ -56,13 +62,15 @@
         }
         
         .alert-icon {
-            width: 60px;
-            height: 60px;
+            /* Reduced icon size */
+            width: 50px;
+            height: 50px;
             margin-bottom: 15px;
         }
         
         h1 {
-            font-size: 22px; 
+            /* Reduced font size for heading */
+            font-size: 20px; 
             margin-bottom: 15px;
             color: #fff;
             text-shadow: 0 2px 5px rgba(0,0,0,0.3);
@@ -70,7 +78,8 @@
         
         p {
             margin-bottom: 20px;
-            font-size: 16px; 
+            /* Reduced font size for paragraphs */
+            font-size: 15px; 
             line-height: 1.5;
         }
         
@@ -81,11 +90,12 @@
         }
         
         .btn {
-            padding: 14px;
+            /* Reduced button padding and font size */
+            padding: 12px; 
             border: none;
             border-radius: 8px;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 16px; 
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -131,54 +141,53 @@
             80% { transform: translateX(10px); }
         }
 
-        /* Media queries are less effective with fixed viewport width,
-           but still good for internal element adjustments if content
-           itself gets smaller or larger due to the fixed width */
-        @media (max-width: 480px) {
+        /* Media Queries for further adjustments on smaller/larger screens */
+        @media (max-width: 420px) {
+            /* If the actual device width is less than 420px, apply these */
             .alert-container {
-                padding: 30px 15px;
+                padding: 30px 10px; /* Reduce padding to avoid too much white space */
             }
             .alert-box {
-                padding: 25px 15px;
-            }
-            h1 {
-                font-size: 20px;
-            }
-            p {
-                font-size: 15px;
-            }
-            .btn {
-                padding: 12px;
-                font-size: 15px;
-            }
-        }
-
-        @media (max-height: 600px) {
-            .alert-box {
-                padding: 20px 15px;
-            }
-            .alert-icon {
-                width: 50px;
-                height: 50px;
-                margin-bottom: 10px;
+                padding: 25px 20px; /* Adjust internal padding */
             }
             h1 {
                 font-size: 18px;
             }
             p {
                 font-size: 14px;
-                margin-bottom: 15px;
             }
             .btn {
                 padding: 10px;
-                font-size: 14px;
-            }
-            .exit-attempts {
-                margin-top: 10px;
-                font-size: 12px;
+                font-size: 15px;
             }
         }
 
+        @media (max-height: 600px) and (orientation: landscape) {
+            .alert-box {
+                padding: 20px 15px;
+                max-width: 90%; /* Allow it to take up more width on shorter landscape screens */
+            }
+            .alert-icon {
+                width: 40px;
+                height: 40px;
+                margin-bottom: 10px;
+            }
+            h1 {
+                font-size: 17px;
+            }
+            p {
+                font-size: 13px;
+                margin-bottom: 15px;
+            }
+            .btn {
+                padding: 8px;
+                font-size: 13px;
+            }
+            .exit-attempts {
+                margin-top: 10px;
+                font-size: 11px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -209,12 +218,14 @@
         const cancelBtn = document.getElementById('cancelBtn');
         const exitAttemptsText = document.getElementById('exitAttempts');
         
+        // Disable back button
         history.pushState(null, null, location.href);
         window.onpopstate = function(event) {
             history.go(1);
             handleExitAttempt();
         };
         
+        // Handle exit attempts
         function handleExitAttempt() {
             attempts++;
             exitAttemptsText.textContent = `Warning: ${attempts}/${maxAttempts} attempts to exit`;
